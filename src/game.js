@@ -133,8 +133,10 @@
 
     randomStartLevel() {
       const roll = Math.random();
-      if (roll > 0.82) return 2;
-      if (roll > 0.48) return 1;
+      if (roll > 0.93) return 4;
+      if (roll > 0.8) return 3;
+      if (roll > 0.6) return 2;
+      if (roll > 0.35) return 1;
       return 0;
     }
 
