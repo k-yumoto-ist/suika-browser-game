@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Drop Merge</title>
+    <link rel="stylesheet" href="./styles.css?v=4" />
+    <script defer src="./src/matter.min.js"></script>
+    <script defer src="./src/fruits.js?v=4"></script>
+    <script defer src="./src/game.js?v=4"></script>
+    <script defer src="./src/main.js?v=4"></script>
+  </head>
+  <body>
+    <main class="app">
+      <section class="hud" aria-label="Game status">
+        <div>
+          <p class="label">Score</p>
+          <p class="score" id="score">0</p>
+        </div>
+        <div class="next-wrap" aria-label="Next drop">
+          <span class="label">Next</span>
+          <canvas id="nextCanvas" width="58" height="58" aria-hidden="true"></canvas>
+        </div>
+        <button id="restartButton" class="icon-button" type="button" aria-label="Restart" title="Restart">
+          <span aria-hidden="true">R</span>
+        </button>
+      </section>
+
+      <section class="board-shell" aria-label="Game board">
+        <canvas id="gameCanvas"></canvas>
+        <div class="drop-line" aria-hidden="true"></div>
+        <div class="aim" id="aim" aria-hidden="true"></div>
+        <div class="overlay is-hidden" id="overlay">
+          <div class="overlay-panel">
+            <p class="result-title">Game Over</p>
+            <p class="result-score">Score <span id="finalScore">0</span></p>
+            <button id="overlayRestartButton" class="primary-button" type="button">Restart</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
