@@ -33,6 +33,7 @@
       this.pointerX = 0;
       this.nextLevel = this.randomStartLevel();
       this.warningSince = 0;
+      this.renderMode = window.localStorage.getItem("dropMergeRenderMode") || "simple";
 
       this.engine = Engine.create();
       this.engine.gravity.y = 0.92;
@@ -156,6 +157,13 @@
       }, 520);
     }
 
+    setRenderMode(mode) {
+      if (!["simple", "fruit"].includes(mode)) return;
+      this.renderMode = mode;
+      window.localStorage.setItem("dropMergeRenderMode", mode);
+      this.drawNext();
+    }
+
     spawnFruit(level, x, y) {
       const fruit = this.fruits[level];
       const body = Bodies.circle(x, y, fruit.radius, {
@@ -265,6 +273,15 @@
     }
 
     drawFruit(context, x, y, radius, fruit) {
+      if (this.renderMode === "fruit") {
+        this.drawFruitIllustration(context, x, y, radius, fruit);
+        return;
+      }
+
+      this.drawSimpleFruit(context, x, y, radius, fruit);
+    }
+
+    drawSimpleFruit(context, x, y, radius, fruit) {
       const gradient = context.createRadialGradient(x - radius * 0.35, y - radius * 0.45, radius * 0.1, x, y, radius);
       gradient.addColorStop(0, fruit.accent);
       gradient.addColorStop(0.58, fruit.color);
@@ -284,6 +301,147 @@
       context.fillStyle = "rgba(255, 255, 255, 0.58)";
       context.fill();
       context.restore();
+    }
+
+    drawFruitIllustration(context, x, y, radius, fruit) {
+      const index = this.fruits.indexOf(fruit);
+      this.drawSimpleFruit(context, x, y, radius, fruit);
+
+      context.save();
+      context.lineCap = "round";
+      context.lineJoin = "round";
+
+      if (index === 0) {
+        this.drawSeeds(context, x, y, radius, "#ffe3ea", 5);
+      } else if (index === 1) {
+        this.drawCitrusSegments(context, x, y, radius, "#efffa4", 6);
+      } else if (index === 2) {
+        this.drawCitrusSegments(context, x, y, radius, "#fff1a8", 8);
+      } else if (index === 3) {
+        this.drawStemAndLeaf(context, x, y, radius, "#5f3b22", "#68b45b");
+      } else if (index === 4) {
+        this.drawStemAndLeaf(context, x, y, radius, "#6c4a29", "#7fbf5b");
+        this.drawPearBelly(context, x, y, radius);
+      } else if (index === 5) {
+        this.drawPeachLine(context, x, y, radius);
+        this.drawStemAndLeaf(context, x, y, radius, "#6c4a29", "#6abf69");
+      } else if (index === 6) {
+        this.drawMelonStripes(context, x, y, radius, "#d8ffe8");
+      } else if (index === 7) {
+        this.drawCoconutFibers(context, x, y, radius);
+      } else if (index === 8) {
+        this.drawPlanetBands(context, x, y, radius);
+      } else {
+        this.drawSunRays(context, x, y, radius);
+      }
+
+      context.restore();
+    }
+
+    drawSeeds(context, x, y, radius, color, count) {
+      context.fillStyle = color;
+      for (let i = 0; i < count; i += 1) {
+        const angle = -Math.PI * 0.76 + i * 0.38;
+        const sx = x + Math.cos(angle) * radius * 0.34;
+        const sy = y + Math.sin(angle) * radius * 0.22 + radius * 0.1;
+        context.beginPath();
+        context.ellipse(sx, sy, radius * 0.07, radius * 0.13, angle, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+
+    drawCitrusSegments(context, x, y, radius, color, count) {
+      context.strokeStyle = color;
+      context.lineWidth = Math.max(1.5, radius * 0.055);
+      context.beginPath();
+      context.arc(x, y, radius * 0.67, 0, Math.PI * 2);
+      context.stroke();
+      for (let i = 0; i < count; i += 1) {
+        const angle = (Math.PI * 2 * i) / count;
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(x + Math.cos(angle) * radius * 0.62, y + Math.sin(angle) * radius * 0.62);
+        context.stroke();
+      }
+    }
+
+    drawStemAndLeaf(context, x, y, radius, stemColor, leafColor) {
+      context.strokeStyle = stemColor;
+      context.lineWidth = Math.max(2, radius * 0.1);
+      context.beginPath();
+      context.moveTo(x - radius * 0.05, y - radius * 0.72);
+      context.quadraticCurveTo(x, y - radius * 1.02, x + radius * 0.16, y - radius * 1.09);
+      context.stroke();
+
+      context.fillStyle = leafColor;
+      context.beginPath();
+      context.ellipse(x + radius * 0.33, y - radius * 0.96, radius * 0.23, radius * 0.12, -0.45, 0, Math.PI * 2);
+      context.fill();
+    }
+
+    drawPearBelly(context, x, y, radius) {
+      context.fillStyle = "rgba(255, 255, 255, 0.18)";
+      context.beginPath();
+      context.ellipse(x, y + radius * 0.22, radius * 0.55, radius * 0.36, 0, 0, Math.PI * 2);
+      context.fill();
+    }
+
+    drawPeachLine(context, x, y, radius) {
+      context.strokeStyle = "rgba(116, 46, 43, 0.42)";
+      context.lineWidth = Math.max(2, radius * 0.06);
+      context.beginPath();
+      context.moveTo(x + radius * 0.18, y - radius * 0.62);
+      context.bezierCurveTo(x - radius * 0.18, y - radius * 0.16, x - radius * 0.06, y + radius * 0.35, x - radius * 0.28, y + radius * 0.68);
+      context.stroke();
+    }
+
+    drawMelonStripes(context, x, y, radius, color) {
+      context.strokeStyle = color;
+      context.lineWidth = Math.max(2, radius * 0.055);
+      for (let i = -2; i <= 2; i += 1) {
+        context.beginPath();
+        context.ellipse(x + i * radius * 0.16, y, radius * 0.2, radius * 0.78, 0, 0, Math.PI * 2);
+        context.stroke();
+      }
+    }
+
+    drawCoconutFibers(context, x, y, radius) {
+      context.strokeStyle = "rgba(245, 225, 198, 0.48)";
+      context.lineWidth = Math.max(1.5, radius * 0.035);
+      for (let i = -3; i <= 3; i += 1) {
+        context.beginPath();
+        context.moveTo(x - radius * 0.7, y + i * radius * 0.14);
+        context.quadraticCurveTo(x, y + i * radius * 0.05, x + radius * 0.68, y - i * radius * 0.1);
+        context.stroke();
+      }
+      context.fillStyle = "#2b1b14";
+      for (let i = 0; i < 3; i += 1) {
+        context.beginPath();
+        context.arc(x + (i - 1) * radius * 0.18, y - radius * 0.22, radius * 0.07, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+
+    drawPlanetBands(context, x, y, radius) {
+      context.strokeStyle = "rgba(226, 247, 229, 0.62)";
+      context.lineWidth = Math.max(3, radius * 0.07);
+      for (let i = -1; i <= 1; i += 1) {
+        context.beginPath();
+        context.ellipse(x, y + i * radius * 0.16, radius * 0.78, radius * 0.12, -0.25, 0, Math.PI * 2);
+        context.stroke();
+      }
+    }
+
+    drawSunRays(context, x, y, radius) {
+      context.strokeStyle = "rgba(255, 132, 46, 0.58)";
+      context.lineWidth = Math.max(3, radius * 0.06);
+      for (let i = 0; i < 12; i += 1) {
+        const angle = (Math.PI * 2 * i) / 12;
+        context.beginPath();
+        context.moveTo(x + Math.cos(angle) * radius * 0.48, y + Math.sin(angle) * radius * 0.48);
+        context.lineTo(x + Math.cos(angle) * radius * 0.78, y + Math.sin(angle) * radius * 0.78);
+        context.stroke();
+      }
     }
   }
 

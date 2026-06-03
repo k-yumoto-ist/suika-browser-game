@@ -52,7 +52,7 @@ button {
 .hud {
   min-height: 74px;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -61,6 +61,31 @@ button {
   border-radius: 8px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
+}
+
+.mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  min-width: 68px;
+}
+
+.mode-button {
+  min-height: 28px;
+  padding: 0 9px;
+  border: 2px solid rgba(38, 51, 50, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.mode-button.is-active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
 }
 
 .label {
@@ -222,5 +247,17 @@ button {
     min-height: 100vh;
     padding-top: 22px;
     padding-bottom: 22px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hud {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .mode-toggle {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    grid-template-columns: 1fr 1fr;
   }
 }

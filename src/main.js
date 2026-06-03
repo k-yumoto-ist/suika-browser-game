@@ -19,6 +19,7 @@
     const options = Object.fromEntries(required);
     const game = new window.DropMergeGame(options);
     const board = options.canvas.parentElement;
+    const modeButtons = Array.from(document.querySelectorAll("[data-render-mode]"));
     let lastDropAt = 0;
 
     function eventPoint(event) {
@@ -102,6 +103,15 @@
 
     document.getElementById("restartButton").addEventListener("click", () => game.reset());
     document.getElementById("overlayRestartButton").addEventListener("click", () => game.reset());
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.renderMode;
+        game.setRenderMode(mode);
+        modeButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+      });
+      button.classList.toggle("is-active", button.dataset.renderMode === game.renderMode);
+    });
 
     window.addEventListener("resize", () => {
       game.resize();
