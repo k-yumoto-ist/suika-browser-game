@@ -223,7 +223,7 @@
         this.warningSince = 0;
       }
 
-      if (this.warningSince && now - this.warningSince > 900) {
+      if (this.warningSince && now - this.warningSince > 450) {
         this.endGame();
       }
     }
