@@ -67,12 +67,12 @@ button {
   display: grid;
   grid-template-columns: 1fr;
   gap: 4px;
-  min-width: 68px;
+  min-width: 74px;
 }
 
 .mode-button {
   min-height: 28px;
-  padding: 0 9px;
+  padding: 0 8px;
   border: 2px solid rgba(38, 51, 50, 0.16);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.68);
@@ -260,6 +260,6 @@ button {
   .mode-toggle {
     grid-column: 1 / -1;
     grid-row: 2;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }

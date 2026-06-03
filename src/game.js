@@ -158,7 +158,7 @@
     }
 
     setRenderMode(mode) {
-      if (!["simple", "fruit"].includes(mode)) return;
+      if (!["simple", "fruit", "number"].includes(mode)) return;
       this.renderMode = mode;
       window.localStorage.setItem("dropMergeRenderMode", mode);
       this.drawNext();
@@ -276,6 +276,10 @@
         this.drawFruitIllustration(context, x, y, radius, fruit);
         return;
       }
+      if (this.renderMode === "number") {
+        this.drawNumberFruit(context, x, y, radius, fruit);
+        return;
+      }
 
       this.drawSimpleFruit(context, x, y, radius, fruit);
     }
@@ -299,6 +303,22 @@
       context.arc(x - radius * 0.28, y - radius * 0.36, radius * 0.18, 0, Math.PI * 2);
       context.fillStyle = "rgba(255, 255, 255, 0.58)";
       context.fill();
+      context.restore();
+    }
+
+    drawNumberFruit(context, x, y, radius, fruit) {
+      const number = this.fruits.indexOf(fruit) + 1;
+      this.drawSimpleFruit(context, x, y, radius, fruit);
+
+      context.save();
+      context.fillStyle = "rgba(255, 255, 255, 0.92)";
+      context.strokeStyle = "rgba(29, 38, 39, 0.42)";
+      context.lineWidth = Math.max(2, radius * 0.08);
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.font = `900 ${Math.max(14, radius * 0.92)}px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+      context.strokeText(String(number), x, y + radius * 0.04);
+      context.fillText(String(number), x, y + radius * 0.04);
       context.restore();
     }
 
