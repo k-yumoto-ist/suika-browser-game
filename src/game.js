@@ -212,19 +212,18 @@
       if (this.gameOver) return;
       const now = performance.now();
       const fruitBodies = Composite.allBodies(this.engine.world).filter((body) => body.plugin?.isFruit);
-      const risky = fruitBodies.some((body) => {
+      const overLine = fruitBodies.some((body) => {
         const age = now - body.plugin.bornAt;
-        const slow = Math.abs(body.velocity.x) + Math.abs(body.velocity.y) < 0.18;
-        return age > 1800 && slow && body.bounds.min.y < this.deadLineY;
+        return age > 1400 && body.bounds.min.y < this.deadLineY;
       });
 
-      if (risky) {
+      if (overLine) {
         this.warningSince ||= now;
       } else {
         this.warningSince = 0;
       }
 
-      if (this.warningSince && now - this.warningSince > 1200) {
+      if (this.warningSince && now - this.warningSince > 900) {
         this.endGame();
       }
     }

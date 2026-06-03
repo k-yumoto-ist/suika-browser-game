@@ -47,11 +47,16 @@
       return point.clientX - rect.left;
     }
 
+    function isUiControl(event) {
+      return Boolean(event.target.closest("button"));
+    }
+
     function moveAim(event) {
       game.updateAim(boardX(event));
     }
 
     function dropAt(event) {
+      if (isUiControl(event) || game.gameOver) return;
       if (!isInsideBoard(event)) return;
       event.preventDefault();
       game.updateAim(boardX(event));
@@ -102,7 +107,10 @@
     });
 
     document.getElementById("restartButton").addEventListener("click", () => game.reset());
-    document.getElementById("overlayRestartButton").addEventListener("click", () => game.reset());
+    document.getElementById("overlayRestartButton").addEventListener("click", (event) => {
+      event.preventDefault();
+      game.reset();
+    });
 
     modeButtons.forEach((button) => {
       button.addEventListener("click", () => {

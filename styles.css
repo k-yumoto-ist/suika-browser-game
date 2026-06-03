@@ -205,10 +205,12 @@ button {
 .overlay {
   position: absolute;
   inset: 0;
+  z-index: 5;
   display: grid;
   place-items: center;
   padding: 22px;
   background: rgba(29, 38, 39, 0.42);
+  pointer-events: auto;
 }
 
 .overlay.is-hidden {
