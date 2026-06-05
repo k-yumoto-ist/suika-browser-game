@@ -31,6 +31,7 @@
       this.gameOver = false;
       this.pendingMerge = new Set();
       this.pointerX = 0;
+      this.currentLevel = this.randomStartLevel();
       this.nextLevel = this.randomStartLevel();
       this.warningSince = 0;
       this.renderMode = window.localStorage.getItem("dropMergeRenderMode") || "simple";
@@ -123,6 +124,7 @@
       this.canDrop = true;
       this.gameOver = false;
       this.pendingMerge.clear();
+      this.currentLevel = this.randomStartLevel();
       this.nextLevel = this.randomStartLevel();
       this.warningSince = 0;
       this.overlay.classList.add("is-hidden");
@@ -133,15 +135,16 @@
 
     randomStartLevel() {
       const roll = Math.random();
-      if (roll > 0.93) return 4;
-      if (roll > 0.8) return 3;
-      if (roll > 0.6) return 2;
-      if (roll > 0.35) return 1;
-      return 0;
+      let level = 0;
+      if (roll > 0.93) level = 4;
+      else if (roll > 0.8) level = 3;
+      else if (roll > 0.6) level = 2;
+      else if (roll > 0.35) level = 1;
+      return level;
     }
 
     updateAim(x) {
-      const current = this.fruits[this.nextLevel];
+      const current = this.fruits[this.currentLevel];
       const margin = current.radius + 8;
       this.pointerX = Math.min(this.width - margin, Math.max(margin, x));
       this.aim.style.left = `${this.pointerX}px`;
@@ -150,10 +153,12 @@
     drop() {
       if (!this.canDrop || this.gameOver) return;
 
-      this.spawnFruit(this.nextLevel, this.pointerX, this.dropY);
+      this.spawnFruit(this.currentLevel, this.pointerX, this.dropY);
+      this.currentLevel = this.nextLevel;
       this.nextLevel = this.randomStartLevel();
       this.canDrop = false;
       this.drawNext();
+      this.updateAim(this.pointerX);
       window.setTimeout(() => {
         this.canDrop = !this.gameOver;
       }, 520);
@@ -265,7 +270,7 @@
       }
 
       if (!this.gameOver && this.canDrop) {
-        const fruit = this.fruits[this.nextLevel];
+        const fruit = this.fruits[this.currentLevel];
         context.save();
         context.globalAlpha = 0.72;
         this.drawFruit(context, this.pointerX, this.dropY, fruit.radius, fruit);
