@@ -10,7 +10,7 @@
     { name: "Peach", radius: 52, score: 96, color: "#ff7f6e", accent: "#ffc0a8" },
     { name: "Melon", radius: 62, score: 192, color: "#2ec4b6", accent: "#9df3dc", fruitColor: "#78b957", fruitAccent: "#d8f08f" },
     { name: "Coconut", radius: 73, score: 384, color: "#7f5539", accent: "#d5bdaf", fruitColor: "#8a5a36", fruitAccent: "#dfc2a3" },
-    { name: "Pineapple", radius: 86, score: 768, color: "#e9b949", accent: "#fff3a3", fruitColor: "#efbd3d", fruitAccent: "#fff0a8" },
-    { name: "Watermelon", radius: 101, score: 1536, color: "#2f9e44", accent: "#9be15d", fruitColor: "#238b45", fruitAccent: "#8ee35f" },
+    { name: "Pineapple", radius: 86, score: 768, color: "#476a6f", accent: "#84a98c", fruitColor: "#efbd3d", fruitAccent: "#fff0a8" },
+    { name: "Watermelon", radius: 101, score: 1536, color: "#f4d35e", accent: "#fff3b0", fruitColor: "#238b45", fruitAccent: "#8ee35f" },
   ];
 })();
