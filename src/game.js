@@ -356,9 +356,9 @@
       } else if (index === 7) {
         this.drawCoconutFibers(context, x, y, radius);
       } else if (index === 8) {
-        this.drawPlanetBands(context, x, y, radius);
+        this.drawPineapplePattern(context, x, y, radius);
       } else {
-        this.drawSunRays(context, x, y, radius);
+        this.drawWatermelonPattern(context, x, y, radius);
       }
 
       context.restore();
@@ -448,25 +448,51 @@
       }
     }
 
-    drawPlanetBands(context, x, y, radius) {
-      context.strokeStyle = "rgba(226, 247, 229, 0.62)";
-      context.lineWidth = Math.max(3, radius * 0.07);
+    drawPineapplePattern(context, x, y, radius) {
+      context.save();
+      context.beginPath();
+      context.arc(x, y, radius * 0.88, 0, Math.PI * 2);
+      context.clip();
+
+      context.strokeStyle = "rgba(122, 76, 18, 0.35)";
+      context.lineWidth = Math.max(2, radius * 0.045);
+      for (let i = -6; i <= 6; i += 1) {
+        context.beginPath();
+        context.moveTo(x - radius * 0.95, y + i * radius * 0.24);
+        context.lineTo(x + radius * 0.95, y + (i + 3.6) * radius * 0.24);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(x + radius * 0.95, y + i * radius * 0.24);
+        context.lineTo(x - radius * 0.95, y + (i + 3.6) * radius * 0.24);
+        context.stroke();
+      }
+      context.restore();
+
+      context.fillStyle = "rgba(50, 120, 56, 0.9)";
       for (let i = -1; i <= 1; i += 1) {
         context.beginPath();
-        context.ellipse(x, y + i * radius * 0.16, radius * 0.78, radius * 0.12, -0.25, 0, Math.PI * 2);
-        context.stroke();
+        context.ellipse(x + i * radius * 0.16, y - radius * 0.72, radius * 0.13, radius * 0.34, i * 0.35, 0, Math.PI * 2);
+        context.fill();
       }
     }
 
-    drawSunRays(context, x, y, radius) {
-      context.strokeStyle = "rgba(255, 132, 46, 0.58)";
+    drawWatermelonPattern(context, x, y, radius) {
+      context.strokeStyle = "rgba(183, 242, 129, 0.72)";
       context.lineWidth = Math.max(3, radius * 0.06);
-      for (let i = 0; i < 12; i += 1) {
-        const angle = (Math.PI * 2 * i) / 12;
+      for (let i = -3; i <= 3; i += 1) {
         context.beginPath();
-        context.moveTo(x + Math.cos(angle) * radius * 0.48, y + Math.sin(angle) * radius * 0.48);
-        context.lineTo(x + Math.cos(angle) * radius * 0.78, y + Math.sin(angle) * radius * 0.78);
+        context.ellipse(x + i * radius * 0.13, y, radius * 0.18, radius * 0.82, 0, 0, Math.PI * 2);
         context.stroke();
+      }
+
+      context.fillStyle = "rgba(20, 54, 31, 0.5)";
+      for (let i = -2; i <= 2; i += 1) {
+        const sx = x + i * radius * 0.22;
+        const sy = y + (i % 2) * radius * 0.13;
+        context.beginPath();
+        context.ellipse(sx, sy, radius * 0.045, radius * 0.08, 0.2, 0, Math.PI * 2);
+        context.fill();
       }
     }
   }

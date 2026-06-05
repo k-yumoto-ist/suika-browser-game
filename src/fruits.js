@@ -10,7 +10,7 @@
     { name: "Peach", radius: 52, score: 96, color: "#ff7f6e", accent: "#ffc0a8" },
     { name: "Melon", radius: 62, score: 192, color: "#2ec4b6", accent: "#9df3dc" },
     { name: "Coconut", radius: 73, score: 384, color: "#7f5539", accent: "#d5bdaf" },
-    { name: "Planet", radius: 86, score: 768, color: "#476a6f", accent: "#84a98c" },
-    { name: "Sun", radius: 101, score: 1536, color: "#f4d35e", accent: "#fff3b0" },
+    { name: "Pineapple", radius: 86, score: 768, color: "#e9b949", accent: "#fff3a3" },
+    { name: "Watermelon", radius: 101, score: 1536, color: "#2f9e44", accent: "#9be15d" },
   ];
 })();
