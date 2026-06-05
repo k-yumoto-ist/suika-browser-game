@@ -331,7 +331,11 @@
 
     drawFruitIllustration(context, x, y, radius, fruit) {
       const index = this.fruits.indexOf(fruit);
-      this.drawSimpleFruit(context, x, y, radius, fruit);
+      this.drawSimpleFruit(context, x, y, radius, {
+        ...fruit,
+        color: fruit.fruitColor || fruit.color,
+        accent: fruit.fruitAccent || fruit.accent,
+      });
 
       context.save();
       context.lineCap = "round";
@@ -352,7 +356,8 @@
         this.drawPeachLine(context, x, y, radius);
         this.drawStemAndLeaf(context, x, y, radius, "#6c4a29", "#6abf69");
       } else if (index === 6) {
-        this.drawMelonStripes(context, x, y, radius, "#d8ffe8");
+        this.drawMelonStripes(context, x, y, radius, "#e7ffd2");
+        this.drawStemAndLeaf(context, x, y, radius, "#5d3b24", "#5fae4c");
       } else if (index === 7) {
         this.drawCoconutFibers(context, x, y, radius);
       } else if (index === 8) {
@@ -422,28 +427,41 @@
     }
 
     drawMelonStripes(context, x, y, radius, color) {
+      context.save();
+      context.beginPath();
+      context.arc(x, y, radius * 0.9, 0, Math.PI * 2);
+      context.clip();
+
       context.strokeStyle = color;
-      context.lineWidth = Math.max(2, radius * 0.055);
-      for (let i = -2; i <= 2; i += 1) {
+      context.lineWidth = Math.max(1.5, radius * 0.035);
+      for (let i = -5; i <= 5; i += 1) {
         context.beginPath();
-        context.ellipse(x + i * radius * 0.16, y, radius * 0.2, radius * 0.78, 0, 0, Math.PI * 2);
+        context.moveTo(x - radius * 0.95, y + i * radius * 0.18);
+        context.lineTo(x + radius * 0.95, y + (i + 2.6) * radius * 0.18);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(x + radius * 0.95, y + i * radius * 0.18);
+        context.lineTo(x - radius * 0.95, y + (i + 2.6) * radius * 0.18);
         context.stroke();
       }
+      context.restore();
     }
 
     drawCoconutFibers(context, x, y, radius) {
-      context.strokeStyle = "rgba(245, 225, 198, 0.48)";
-      context.lineWidth = Math.max(1.5, radius * 0.035);
-      for (let i = -3; i <= 3; i += 1) {
+      context.strokeStyle = "rgba(248, 224, 194, 0.54)";
+      context.lineWidth = Math.max(1.5, radius * 0.032);
+      for (let i = -4; i <= 4; i += 1) {
         context.beginPath();
-        context.moveTo(x - radius * 0.7, y + i * radius * 0.14);
-        context.quadraticCurveTo(x, y + i * radius * 0.05, x + radius * 0.68, y - i * radius * 0.1);
+        context.moveTo(x - radius * 0.72, y + i * radius * 0.12);
+        context.quadraticCurveTo(x - radius * 0.04, y + i * radius * 0.03, x + radius * 0.72, y - i * radius * 0.08);
         context.stroke();
       }
+
       context.fillStyle = "#2b1b14";
       for (let i = 0; i < 3; i += 1) {
         context.beginPath();
-        context.arc(x + (i - 1) * radius * 0.18, y - radius * 0.22, radius * 0.07, 0, Math.PI * 2);
+        context.arc(x + (i - 1) * radius * 0.16, y - radius * 0.23 + Math.abs(i - 1) * radius * 0.06, radius * 0.075, 0, Math.PI * 2);
         context.fill();
       }
     }
@@ -470,28 +488,28 @@
       context.restore();
 
       context.fillStyle = "rgba(50, 120, 56, 0.9)";
-      for (let i = -1; i <= 1; i += 1) {
+      for (let i = -2; i <= 2; i += 1) {
         context.beginPath();
-        context.ellipse(x + i * radius * 0.16, y - radius * 0.72, radius * 0.13, radius * 0.34, i * 0.35, 0, Math.PI * 2);
+        context.ellipse(x + i * radius * 0.11, y - radius * 0.73, radius * 0.11, radius * 0.36, i * 0.28, 0, Math.PI * 2);
         context.fill();
       }
     }
 
     drawWatermelonPattern(context, x, y, radius) {
-      context.strokeStyle = "rgba(183, 242, 129, 0.72)";
-      context.lineWidth = Math.max(3, radius * 0.06);
-      for (let i = -3; i <= 3; i += 1) {
+      context.strokeStyle = "rgba(171, 232, 96, 0.78)";
+      context.lineWidth = Math.max(4, radius * 0.075);
+      for (let i = -4; i <= 4; i += 1) {
         context.beginPath();
-        context.ellipse(x + i * radius * 0.13, y, radius * 0.18, radius * 0.82, 0, 0, Math.PI * 2);
+        context.ellipse(x + i * radius * 0.12, y, radius * 0.13, radius * 0.82, 0, 0, Math.PI * 2);
         context.stroke();
       }
 
-      context.fillStyle = "rgba(20, 54, 31, 0.5)";
-      for (let i = -2; i <= 2; i += 1) {
-        const sx = x + i * radius * 0.22;
-        const sy = y + (i % 2) * radius * 0.13;
+      context.fillStyle = "rgba(18, 43, 26, 0.62)";
+      for (let i = -3; i <= 3; i += 1) {
+        const sx = x + i * radius * 0.17;
+        const sy = y + (i % 2) * radius * 0.15;
         context.beginPath();
-        context.ellipse(sx, sy, radius * 0.045, radius * 0.08, 0.2, 0, Math.PI * 2);
+        context.ellipse(sx, sy, radius * 0.04, radius * 0.075, 0.18, 0, Math.PI * 2);
         context.fill();
       }
     }
