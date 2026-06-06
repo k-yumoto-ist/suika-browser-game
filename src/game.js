@@ -193,11 +193,21 @@
     tryMerge(a, b) {
       if (this.gameOver || !a.plugin?.isFruit || !b.plugin?.isFruit) return;
       if (a.plugin.level !== b.plugin.level) return;
-      if (a.plugin.level >= this.fruits.length - 1) return;
       if (this.pendingMerge.has(a.id) || this.pendingMerge.has(b.id)) return;
 
       this.pendingMerge.add(a.id);
       this.pendingMerge.add(b.id);
+
+      if (a.plugin.level >= this.fruits.length - 1) {
+        window.requestAnimationFrame(() => {
+          Composite.remove(this.engine.world, [a, b]);
+          this.score += this.fruits[a.plugin.level].score;
+          this.updateScore();
+          this.pendingMerge.delete(a.id);
+          this.pendingMerge.delete(b.id);
+        });
+        return;
+      }
 
       const level = a.plugin.level + 1;
       const x = (a.position.x + b.position.x) / 2;
