@@ -38,6 +38,9 @@
 
       this.engine = Engine.create();
       this.engine.gravity.y = 0.92;
+      this.engine.positionIterations = 8;
+      this.engine.velocityIterations = 6;
+      this.engine.enableSleeping = true;
       this.runner = Runner.create();
       this.render = Render.create({
         canvas: this.canvas,
@@ -64,6 +67,7 @@
       });
 
       Events.on(this.engine, "afterUpdate", () => {
+        this.keepFruitsInBounds();
         this.checkGameOver();
       });
 
@@ -73,9 +77,12 @@
     }
 
     resize() {
-      const rect = this.canvas.parentElement.getBoundingClientRect();
-      this.width = Math.max(300, Math.floor(rect.width));
-      this.height = Math.max(460, Math.floor(rect.height));
+      const boardRect = this.canvas.parentElement.getBoundingClientRect();
+      const canvasRect = this.canvas.getBoundingClientRect();
+      const width = canvasRect.width || boardRect.width;
+      const height = canvasRect.height || boardRect.height;
+      this.width = Math.max(300, Math.floor(width));
+      this.height = Math.max(460, Math.floor(height));
       this.dropY = Math.round(this.height * 0.1);
       this.deadLineY = Math.round(this.height * 0.13);
 
@@ -114,6 +121,39 @@
         Bodies.rectangle(this.width + thickness / 2, this.height / 2, thickness, this.height * 2, wallOptions),
       ];
       Composite.add(this.engine.world, this.bounds);
+    }
+
+    keepFruitsInBounds() {
+      const fruitBodies = Composite.allBodies(this.engine.world).filter((body) => body.plugin?.isFruit);
+
+      for (const body of fruitBodies) {
+        let x = body.position.x;
+        let y = body.position.y;
+        let velocityX = body.velocity.x;
+        let velocityY = body.velocity.y;
+        let corrected = false;
+
+        if (body.bounds.min.x < 0) {
+          x -= body.bounds.min.x;
+          velocityX = Math.max(0, velocityX);
+          corrected = true;
+        } else if (body.bounds.max.x > this.width) {
+          x -= body.bounds.max.x - this.width;
+          velocityX = Math.min(0, velocityX);
+          corrected = true;
+        }
+
+        if (body.bounds.max.y > this.height) {
+          y -= body.bounds.max.y - this.height;
+          velocityY = Math.min(0, velocityY);
+          corrected = true;
+        }
+
+        if (!corrected) continue;
+
+        Body.setPosition(body, { x, y });
+        Body.setVelocity(body, { x: velocityX, y: velocityY });
+      }
     }
 
     reset() {
