@@ -121,9 +121,21 @@
       button.classList.toggle("is-active", button.dataset.renderMode === game.renderMode);
     });
 
-    window.addEventListener("resize", () => {
-      game.resize();
-    });
+    let resizeFrame = 0;
+    function resizeGame() {
+      if (resizeFrame) return;
+      resizeFrame = window.requestAnimationFrame(() => {
+        resizeFrame = 0;
+        game.resize();
+      });
+    }
+
+    window.addEventListener("resize", resizeGame);
+    window.visualViewport?.addEventListener("resize", resizeGame);
+    if (window.ResizeObserver) {
+      const boardResizeObserver = new ResizeObserver(resizeGame);
+      boardResizeObserver.observe(board);
+    }
   }
 
   if (document.readyState === "loading") {

@@ -77,10 +77,10 @@
     }
 
     resize() {
-      const boardRect = this.canvas.parentElement.getBoundingClientRect();
-      const canvasRect = this.canvas.getBoundingClientRect();
-      const width = canvasRect.width || boardRect.width;
-      const height = canvasRect.height || boardRect.height;
+      const board = this.canvas.parentElement;
+      const boardRect = board.getBoundingClientRect();
+      const width = board.clientWidth || boardRect.width;
+      const height = board.clientHeight || boardRect.height;
       this.width = Math.max(300, Math.floor(width));
       this.height = Math.max(460, Math.floor(height));
       this.dropY = Math.round(this.height * 0.1);
